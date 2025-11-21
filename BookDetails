@@ -1,0 +1,288 @@
+import { useState, useEffect } from 'react';
+import { Book, Note, BookStatus } from '../types';
+import { ArrowLeft, Edit, Trash2, Plus, Calendar, Tag, User, BookOpen, StickyNote, Quote, Lightbulb } from 'lucide-react';
+import { ImageWithFallback } from './figma/ImageWithFallback';
+
+interface BookDetailsProps {
+  book: Book;
+  onBack: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  onAddNote: (note: Omit<Note, 'id' | 'date'>) => void;
+  onDeleteNote: (noteId: string) => void;
+  onUpdateStatus: (status: BookStatus) => void;
+}
+
+const noteTypeIcons = {
+  note: StickyNote,
+  quote: Quote,
+  reflection: Lightbulb
+};
+
+const noteTypeLabels = {
+  note: 'Notiz',
+  quote: 'Zitat',
+  reflection: 'Reflexion'
+};
+
+const noteTypeColors = {
+  note: 'bg-blue-100 text-blue-700 border-blue-200',
+  quote: 'bg-purple-100 text-purple-700 border-purple-200',
+  reflection: 'bg-amber-100 text-amber-700 border-amber-200'
+};
+
+const statusLabels = {
+  read: 'Gelesen',
+  reading: 'Lese ich',
+  planned: 'Geplant'
+};
+
+export function BookDetails({ book, onBack, onEdit, onDelete, onAddNote, onDeleteNote, onUpdateStatus }: BookDetailsProps) {
+  const [showNoteForm, setShowNoteForm] = useState(false);
+  const [noteContent, setNoteContent] = useState('');
+  const [noteType, setNoteType] = useState<'note' | 'quote' | 'reflection'>('note');
+
+  const handleSubmitNote = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (noteContent.trim()) {
+      onAddNote({ content: noteContent, type: noteType });
+      setNoteContent('');
+      setShowNoteForm(false);
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('de-DE', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto">
+      {/* Back Button */}
+      <button
+        onClick={onBack}
+        className="mb-6 flex items-center gap-2 text-black hover:text-gray-700 transition-colors"
+        style={{ fontWeight: 600 }}
+      >
+        <ArrowLeft className="size-4" />
+        Zurück zum Dashboard
+      </button>
+
+      {/* Book Header */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-6">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Book Cover */}
+          <div className="flex-shrink-0">
+            {book.coverImage ? (
+              <ImageWithFallback
+                src={book.coverImage}
+                alt={⁠ ${book.title} Buchcover ⁠}
+                className="w-48 h-64 object-cover rounded-lg shadow-md"
+              />
+            ) : (
+              <div className="w-48 h-64 bg-gradient-to-br from-gray-200 to-gray-400 rounded-lg shadow-md flex items-center justify-center p-6">
+                <BookOpen className="size-16 text-gray-600" />
+              </div>
+            )}
+          </div>
+
+          {/* Book Info */}
+          <div className="flex-1 space-y-4">
+            <div>
+              <h1 className="text-gray-900 mb-2">{book.title}</h1>
+              <p className="text-gray-600 flex items-center gap-2">
+                <User className="size-4" />
+                {book.author}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="text-gray-500 mb-1 flex items-center gap-2">
+                  <Tag className="size-4" />
+                  Genre
+                </p>
+                <p className="text-gray-900">{book.genre}</p>
+              </div>
+              <div>
+                <p className="text-gray-500 mb-1 flex items-center gap-2">
+                  <Calendar className="size-4" />
+                  Jahr
+                </p>
+                <p className="text-gray-900">{book.year}</p>
+              </div>
+              <div>
+                <p className="text-gray-500 mb-1">Hinzugefügt</p>
+                <p className="text-gray-900">{formatDate(book.dateAdded)}</p>
+              </div>
+              {book.dateFinished && (
+                <div>
+                  <p className="text-gray-500 mb-1">Beendet</p>
+                  <p className="text-gray-900">{formatDate(book.dateFinished)}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Status Selector */}
+            <div>
+              <label className="text-gray-700 mb-2 block" style={{ fontWeight: 600 }}>Status</label>
+              <div className="flex gap-2">
+                {(['planned', 'reading', 'read'] as BookStatus[]).map((status) => (
+                  <button
+                    key={status}
+                    onClick={() => onUpdateStatus(status)}
+                    className={`px-4 py-2 rounded-lg text-sm transition-colors ${
+                      book.status === status
+                        ? 'bg-black text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                    style={{ fontWeight: 600 }}
+                  >
+                    {statusLabels[status]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-3 pt-4">
+              <button
+                onClick={onEdit}
+                className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded-lg flex items-center gap-2 transition-colors"
+                style={{ fontWeight: 600 }}
+              >
+                <Edit className="size-4" />
+                Bearbeiten
+              </button>
+              <button
+                onClick={() => {
+                  if (confirm('Möchten Sie dieses Buch wirklich löschen?')) {
+                    onDelete();
+                  }
+                }}
+                className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg flex items-center gap-2 transition-colors"
+                style={{ fontWeight: 600 }}
+              >
+                <Trash2 className="size-4" />
+                Löschen
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Notes Section */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-black" style={{ fontWeight: 800 }}>Journal & Notizen</h2>
+          <button
+            onClick={() => setShowNoteForm(!showNoteForm)}
+            className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded-lg flex items-center gap-2 transition-colors"
+            style={{ fontWeight: 600 }}
+          >
+            <Plus className="size-4" />
+            Notiz hinzufügen
+          </button>
+        </div>
+
+        {/* Add Note Form */}
+        {showNoteForm && (
+          <form onSubmit={handleSubmitNote} className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="mb-4">
+              <label className="text-gray-700 mb-2 block" style={{ fontWeight: 600 }}>Typ</label>
+              <div className="flex gap-2">
+                {(['note', 'quote', 'reflection'] as const).map((type) => {
+                  const Icon = noteTypeIcons[type];
+                  return (
+                    <button
+                      key={type}
+                      type="button"
+                      onClick={() => setNoteType(type)}
+                      className={`px-3 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors ${
+                        noteType === type
+                          ? 'bg-black text-white'
+                          : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                      }`}
+                      style={{ fontWeight: 600 }}
+                    >
+                      <Icon className="size-4" />
+                      {noteTypeLabels[type]}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <textarea
+              value={noteContent}
+              onChange={(e) => setNoteContent(e.target.value)}
+              placeholder="Schreiben Sie Ihre Gedanken, Zitate oder Reflexionen..."
+              className="w-full border border-gray-200 rounded-lg p-3 min-h-32 focus:outline-none focus:ring-2 focus:ring-black"
+              required
+            />
+            <div className="flex gap-2 mt-3">
+              <button
+                type="submit"
+                className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded-lg transition-colors"
+                style={{ fontWeight: 600 }}
+              >
+                Speichern
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowNoteForm(false);
+                  setNoteContent('');
+                }}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-lg transition-colors"
+                style={{ fontWeight: 600 }}
+              >
+                Abbrechen
+              </button>
+            </div>
+          </form>
+        )}
+
+        {/* Notes List */}
+        <div className="space-y-4">
+          {book.notes.length === 0 ? (
+            <p className="text-gray-500 text-center py-8">Noch keine Notizen vorhanden</p>
+          ) : (
+            book.notes.map((note) => {
+              const Icon = noteTypeIcons[note.type];
+              return (
+                <div
+                  key={note.id}
+                  className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className={⁠ px-2 py-1 rounded-full text-xs border flex items-center gap-1 ${noteTypeColors[note.type]} ⁠}>
+                        <Icon className="size-3" />
+                        {noteTypeLabels[note.type]}
+                      </div>
+                      <span className="text-sm text-gray-500">{formatDate(note.date)}</span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        if (confirm('Möchten Sie diese Notiz wirklich löschen?')) {
+                          onDeleteNote(note.id);
+                        }
+                      }}
+                      className="text-red-600 hover:bg-red-50 p-1 rounded transition-colors"
+                    >
+                      <Trash2 className="size-4" />
+                    </button>
+                  </div>
+                  <p className="text-gray-800 whitespace-pre-wrap">{note.content}</p>
+                </div>
+              );
+            })
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
