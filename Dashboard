@@ -1,0 +1,139 @@
+import { Book } from '../types';
+import { BookCard } from './BookCard';
+import { Plus, BookOpen, BookMarked, Clock } from 'lucide-react';
+
+interface DashboardProps {
+  books: Book[];
+  onViewBook: (id: string) => void;
+  onEditBook: (book: Book) => void;
+  onDeleteBook: (id: string) => void;
+  onAddBook: () => void;
+  onUpdateBook: (book: Book) => void;
+}
+
+export function Dashboard({ books, onViewBook, onEditBook, onDeleteBook, onAddBook, onUpdateBook }: DashboardProps) {
+  const readBooks = books.filter(b => b.status === 'read');
+  const readingBooks = books.filter(b => b.status === 'reading');
+  const plannedBooks = books.filter(b => b.status === 'planned');
+
+  return (
+    <div className="space-y-8">
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-gray-100 rounded-lg">
+              <BookOpen className="size-5 text-black" />
+            </div>
+            <span className="text-gray-600">Gelesen</span>
+          </div>
+          <p className="text-gray-900" style={{ fontWeight: 800, fontSize: '1.5rem' }}>
+            {readBooks.length} {readBooks.length === 1 ? 'Buch' : 'Bücher'}
+          </p>
+        </div>
+        
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-gray-100 rounded-lg">
+              <BookMarked className="size-5 text-black" />
+            </div>
+            <span className="text-gray-600">Aktuell</span>
+          </div>
+          <p className="text-gray-900" style={{ fontWeight: 800, fontSize: '1.5rem' }}>
+            {readingBooks.length} {readingBooks.length === 1 ? 'Buch' : 'Bücher'}
+          </p>
+        </div>
+        
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-gray-100 rounded-lg">
+              <Clock className="size-5 text-black" />
+            </div>
+            <span className="text-gray-600">Geplant</span>
+          </div>
+          <p className="text-gray-900" style={{ fontWeight: 800, fontSize: '1.5rem' }}>
+            {plannedBooks.length} {plannedBooks.length === 1 ? 'Buch' : 'Bücher'}
+          </p>
+        </div>
+      </div>
+
+      {/* Add Book Button */}
+      <button
+        onClick={onAddBook}
+        className="w-full bg-black hover:bg-gray-800 text-white py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-sm"
+        style={{ fontWeight: 600 }}
+      >
+        <Plus className="size-5" />
+        Neues Buch hinzufügen
+      </button>
+
+      {/* Currently Reading */}
+      {readingBooks.length > 0 && (
+        <div>
+          <h2 className="text-black mb-4" style={{ fontWeight: 800 }}>Aktuell lese ich</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {readingBooks.map(book => (
+              <BookCard
+                key={book.id}
+                book={book}
+                onViewBook={onViewBook}
+                onView={() => onViewBook(book.id)}
+                onEdit={() => onEditBook(book)}
+                onDelete={() => onDeleteBook(book.id)}
+                onUpdateBook={onUpdateBook}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Read Books */}
+      {readBooks.length > 0 && (
+        <div>
+          <h2 className="text-black mb-4" style={{ fontWeight: 800 }}>Gelesen</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {readBooks.map(book => (
+              <BookCard
+                key={book.id}
+                book={book}
+                onViewBook={onViewBook}
+                onView={() => onViewBook(book.id)}
+                onEdit={() => onEditBook(book)}
+                onDelete={() => onDeleteBook(book.id)}
+                onUpdateBook={onUpdateBook}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Planned Books */}
+      {plannedBooks.length > 0 && (
+        <div>
+          <h2 className="text-black mb-4" style={{ fontWeight: 800 }}>Leseliste</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {plannedBooks.map(book => (
+              <BookCard
+                key={book.id}
+                book={book}
+                onViewBook={onViewBook}
+                onView={() => onViewBook(book.id)}
+                onEdit={() => onEditBook(book)}
+                onDelete={() => onDeleteBook(book.id)}
+                onUpdateBook={onUpdateBook}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {books.length === 0 && (
+        <div className="text-center py-16">
+          <BookOpen className="size-16 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-black mb-2" style={{ fontWeight: 800 }}>Noch keine Bücher</h3>
+          <p className="text-gray-600">Fügen Sie Ihr erstes Buch hinzu, um zu beginnen</p>
+        </div>
+      )}
+    </div>
+  );
+}
