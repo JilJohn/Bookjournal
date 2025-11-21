@@ -1,1 +1,191 @@
+import { useState } from 'react';
+import { Dashboard } from './components/Dashboard';
+import { BookDetails } from './components/BookDetails';
+import { AddBookForm } from './components/AddBookForm';
+import { ProgressView } from './components/ProgressView';
+import { Book, BookStatus, Note } from './types';                        #Book: beschreibt welche Daten ein Buch besitzt(Titel, Autor, etc), Bookstatus (Enum z
+import { BookOpen, BarChart3 } from 'lucide-react';
 
+export default function App() {
+  const [books, setBooks] = useState<Book[]>([
+    {
+      id: '1',
+      title: 'Der grosse Gatsby',
+      author: 'F. Scott Fitzgerald',
+      genre: 'Klassiker',
+      year: 1925,
+      status: 'read',
+      dateAdded: '2024-01-15',
+      dateFinished: '2024-02-01',
+      notes: []
+    },
+    {
+      id: '2',
+      title: '1984',
+      author: 'George Orwell',
+      genre: 'Dystopie',
+      year: 1949,
+      status: 'reading',
+      dateAdded: '2024-02-10',
+      notes: []
+    },
+    {
+      id: '3',
+      title: 'Sapiens',
+      author: 'Yuval Noah Harari',
+      genre: 'Sachbuch',
+      year: 2011,
+      status: 'planned',
+      dateAdded: '2024-03-01',
+      notes: []
+    }
+  ]);
+  
+  const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
+  const [currentView, setCurrentView] = useState<'dashboard' | 'book-details' | 'add-book' | 'progress'>('dashboard');
+  const [editingBook, setEditingBook] = useState<Book | null>(null);
+
+  const addBook = (book: Omit<Book, 'id' | 'notes'>) => {
+    const newBook: Book = {
+      ...book,
+      id: Date.now().toString(),
+      notes: []
+    };
+    setBooks([...books, newBook]);
+    setCurrentView('dashboard');
+  };
+
+  const updateBook = (updatedBook: Book) => {
+    setBooks(books.map(book => book.id === updatedBook.id ? updatedBook : book));
+    setCurrentView('dashboard');
+    setEditingBook(null);
+  };
+
+  const deleteBook = (id: string) => {
+    setBooks(books.filter(book => book.id !== id));
+    setCurrentView('dashboard');
+    setSelectedBookId(null);
+  };
+
+  const addNoteToBook = (bookId: string, note: Omit<Note, 'id' | 'date'>) => {
+    setBooks(books.map(book => {
+      if (book.id === bookId) {
+        const newNote: Note = {
+          ...note,
+          id: Date.now().toString(),
+          date: new Date().toISOString()
+        };
+        return { ...book, notes: [...book.notes, newNote] };
+      }
+      return book;
+    }));
+  };
+
+  const deleteNote = (bookId: string, noteId: string) => {
+    setBooks(books.map(book => {
+      if (book.id === bookId) {
+        return { ...book, notes: book.notes.filter(note => note.id !== noteId) };
+      }
+      return book;
+    }));
+  };
+
+  const handleEditBook = (book: Book) => {
+    setEditingBook(book);
+    setCurrentView('add-book');
+  };
+
+  const handleViewBook = (bookId: string) => {
+    setSelectedBookId(bookId);
+    setCurrentView('book-details');
+  };
+
+  const handleAddNewBook = () => {
+    setEditingBook(null);
+    setCurrentView('add-book');
+  };
+
+  const selectedBook = selectedBookId ? books.find(b => b.id === selectedBookId) || null : null;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
+      {/* Header */}
+      <header className="bg-white border-b border-amber-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <BookOpen className="size-8 text-amber-600" />
+              <h1 className="text-amber-900">BookJournal</h1>
+            </div>
+            <nav className="flex gap-2">
+              <button
+                onClick={() => setCurrentView('dashboard')}
+                className={`px-4 py-2 rounded-lg transition-colors ${
+                  currentView === 'dashboard'
+                    ? 'bg-amber-600 text-white'
+                    : 'text-amber-700 hover:bg-amber-100'
+                }`}
+              >
+                Dashboard
+              </button>
+              <button
+                onClick={() => setCurrentView('progress')}
+                className={`px-4 py-2 rounded-lg transition-colors flex items-center gap-2 ${
+                  currentView === 'progress'
+                    ? 'bg-amber-600 text-white'
+                    : 'text-amber-700 hover:bg-amber-100'
+                }`}
+              >
+                <BarChart3 className="size-4" />
+                Fortschritt
+              </button>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {currentView === 'dashboard' && (
+          <Dashboard
+            books={books}
+            onViewBook={handleViewBook}
+            onEditBook={handleEditBook}
+            onDeleteBook={deleteBook}
+            onAddBook={handleAddNewBook}
+          />
+        )}
+        
+        {currentView === 'book-details' && selectedBook && (
+          <BookDetails
+            book={selectedBook}
+            onBack={() => setCurrentView('dashboard')}
+            onEdit={() => handleEditBook(selectedBook)}
+            onDelete={() => deleteBook(selectedBook.id)}
+            onAddNote={(note) => addNoteToBook(selectedBook.id, note)}
+            onDeleteNote={(noteId) => deleteNote(selectedBook.id, noteId)}
+            onUpdateStatus={(status) => updateBook({ ...selectedBook, status })}
+          />
+        )}
+        
+        {currentView === 'add-book' && (
+          <AddBookForm
+            book={editingBook}
+            onSubmit={editingBook ? updateBook : addBook}
+            onCancel={() => {
+              setCurrentView('dashboard');
+              setEditingBook(null);
+            }}
+          />
+        )}
+        
+        {currentView === 'progress' && (
+          <ProgressView
+            books={books}
+            onBack={() => setCurrentView('dashboard')}
+          />
+        )}
+      </main>
+    </div>
+  );
+}
