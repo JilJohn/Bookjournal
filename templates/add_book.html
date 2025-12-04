@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Journal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Work Sans', sans-serif;
+      background-color: var(--background, #fff);
+      color: var(--foreground, #000);
+      padding: 20px;
+    }
+
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .book-card {
+      background-color: gray; /* graue Box */
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .book-card:hover {
+      transform: scale(1.05); /* kleiner Hover-Effekt */
+    }
+
+    .meta {
+      font-size: 0.9em;
+      color: #ddd;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  {% extends "base.html" %}
+  {% block title %}Bücher - Übersicht{% endblock %}
+  {% block content %}
+    <h1>Meine Bücher</h1>
+
+    <div class="books-grid">
+      {% for book in books %}
+        <article class="book-card">
+          <a href="{{ url_for('book_detail', book_id=book.id) }}">
+            <h2>{{ book.title }}</h2>
+            <p class="meta">{{ book.author }}</p>
+            <p class="status">Status: {{ book.status }}</p>
+          </a>
+        </article>
+      {% endfor %}
+    </div>
+  {% endblock %}
+</body>
+</html>
