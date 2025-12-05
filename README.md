@@ -26,3 +26,6 @@ Lesefortschritt eintragen und verfolgen
 ## Umsetzung mit Flask
 Backend:        Flask (Python) für Routing und Logik
 Frontend:       HTML/CSS 
+
+## Installation
+beschreiben wie app funktionieren sollte

@@ -42,25 +42,67 @@
       margin-top: 10px;
       font-weight: 600;
     }
+
+    .form {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .form label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .form input,
+    .form select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .form button {
+      background: var(--accent);
+      color: #fff;
+      padding: 0.5rem 0.8rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .form a {
+      margin-left: 0.5rem;
+      color: var(--muted);
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
   {% extends "base.html" %}
-  {% block title %}Bücher - Übersicht{% endblock %}
+  {% block title %}Buch hinzufügen{% endblock %}
   {% block content %}
-    <h1>Meine Bücher</h1>
+    <h1>Neues Buch hinzufügen</h1>
 
-    <div class="books-grid">
-      {% for book in books %}
-        <article class="book-card">
-          <a href="{{ url_for('book_detail', book_id=book.id) }}">
-            <h2>{{ book.title }}</h2>
-            <p class="meta">{{ book.author }}</p>
-            <p class="status">Status: {{ book.status }}</p>
-          </a>
-        </article>
-      {% endfor %}
-    </div>
+    <form method="POST" class="form">
+      <label for="title">Titel</label>
+      <input id="title" name="title" type="text" required>
+
+      <label for="author">Autor</label>
+      <input id="author" name="author" type="text">
+
+      <label for="status">Status</label>
+      <select id="status" name="status">
+        <option value="planned">Planned</option>
+        <option value="reading">Reading</option>
+        <option value="read">Read</option>
+      </select>
+
+      <div style="margin-top:.5rem;">
+        <button type="submit">Hinzufügen</button>
+        <a href="{{ url_for('index') }}" style="margin-left:.5rem;color:var(--muted);text-decoration:none;">Abbrechen</a>
+      </div>
+    </form>
   {% endblock %}
 </body>
 </html>

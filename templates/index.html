@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="de">
+    {% extends "base.html" %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,19 +9,24 @@
 </head>
 <body>
     {% block content %}
+  <div class="page-actions" style="display:flex;justify-content:space-between;align-items:center;">
     <h1>Meine Bücher</h1>
+    <a class="btn" href="{{ url_for('add_book') }}">Buch hinzufügen</a>
+  </div>
 
-    <div class="books-grid">
-    {% for book in books %}
-        <article class="book-card">
-            <a href="{{ url_for('book_detail', book_id=book.id) }}">
-                <h2>{{ book.title }}</h2>
-                <p class="meta">{{ book.author }}</p>
-                <p class="status">{{ book.status }}</p>
-            </a>
-        </article>
-    {% endfor %}
-    </div>
-    {% endblock %}
+  <div class="books-grid">
+  {% for book in books %}
+      <article class="book-card">
+          <a href="{{ url_for('book_detail', book_id=book.id) }}">
+              <h2>{{ book.title }}</h2>
+              <p class="meta">{{ book.author }}</p>
+              <p class="status">{{ book.status }}</p>
+          </a>
+      </article>
+  {% else %}
+      <p>Keine Bücher vorhanden. Füge ein neues Buch hinzu.</p>
+  {% endfor %}
+  </div>
+{% endblock %}
 </body>
 </html>

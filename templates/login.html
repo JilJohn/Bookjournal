@@ -4,17 +4,23 @@
     <title>Login</title>
 </head>
 <body>
-    {% extends "base.html" %}
-    {% block title %}Login{% endblock %}
-    {% block content %}
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="login-page" style="max-width:420px;margin:2rem auto;">
   <h1>Login</h1>
   <form method="POST" class="form">
-      <label>Benutzername:</label>
-      <input type="text" name="username" required>
-      <label>Passwort:</label>
-      <input type="password" name="password" required>
+    <label for="username">Benutzername</label>
+    <input id="username" name="username" type="text" required autofocus>
+
+    <label for="password">Passwort</label>
+    <input id="password" name="password" type="password" required>
+
+    <div style="margin-top:.5rem;">
       <button type="submit">Login</button>
+    </div>
   </form>
+</div>
 {% endblock %}
 </body>
 </html>

@@ -1,27 +1,28 @@
-import os
 from flask import Flask, render_template, request, redirect, url_for, session
-from book_app import BookJournalApp
+from db import BookDB
+import secrets
 
-# wähle templates-Ordner (case-insensitive)
-base_dir = os.path.dirname(__file__)
-if os.path.isdir(os.path.join(base_dir, "templates")):
-    template_folder = "templates"
-elif os.path.isdir(os.path.join(base_dir, "Templates")):
-    template_folder = "Templates"
-else:
-    template_folder = "templates"
+app = Flask(__name__)
+app.secret_key = secrets.token_urlsafe(32)
 
-app = Flask(__name__, template_folder=template_folder, static_folder="static")
-app.secret_key = os.environ.get("SECRET_KEY", "dev-secret")
+journal = BookDB()
 
-journal = BookJournalApp()
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        if username:
+            session['user'] = username
+            return redirect(url_for('dashboard'))
+    return render_template('login.html')
 
 @app.route('/')
 def index():
     books = journal.list_books()
     return render_template('index.html', books=books)
 
-@app.route('/book/<book_id>', methods=['GET', 'POST'])
+
+@app.route('/book/<int:book_id>', methods=['GET', 'POST'])
 def book_detail(book_id):
     book = journal.get_book(book_id)
     if not book:
@@ -29,10 +30,10 @@ def book_detail(book_id):
 
     if request.method == 'POST':
         note = request.form.get('note')
-        if note and hasattr(journal, "add_note_to_book"):
+        if note:
             journal.add_note_to_book(book_id, note)
         status = request.form.get('status')
-        if status and hasattr(journal, "update_book_status"):
+        if status:
             journal.update_book_status(book_id, status)
         return redirect(url_for('book_detail', book_id=book_id))
 
@@ -43,29 +44,12 @@ def add_book():
     if request.method == 'POST':
         title = request.form.get('title')
         author = request.form.get('author')
-        status = request.form.get('status')
-        if title and hasattr(journal, "add_book"):
-            try:
-                # best-effort Aufruf: (title, author, status) oder (title, author)
-                journal.add_book(title, author, status)
-            except TypeError:
-                try:
-                    journal.add_book(title, author)
-                except Exception:
-                    pass
+        status = request.form.get('status') or "planned"
+        if title:
+            journal.add_book(title, author, status)
         return redirect(url_for('index'))
 
-    books = journal.list_books()
-    return render_template('add_book.html', books=books)
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        if username:
-            session['user'] = username
-            return redirect(url_for('dashboard'))
-    return render_template('login.html')
+    return render_template('add_book.html')
 
 @app.route('/logout')
 def logout():
@@ -80,3 +64,4 @@ def dashboard():
 
 if __name__ == "__main__":
     app.run(debug=True, port=5002)
+
