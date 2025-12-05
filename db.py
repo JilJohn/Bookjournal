@@ -55,7 +55,7 @@ class BookDB:
         if book:
             book.status = status
             self.db.commit()
-```# filepath: /Users/jiljohn/Bookjournal/db.py
+# filepath: /Users/jiljohn/Bookjournal/db.py
 from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
