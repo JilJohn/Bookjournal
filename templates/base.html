@@ -11,12 +11,12 @@
   <header class="site-header">
     <nav class="nav">
       {# Brand: geht zur Hauptübersicht wenn eingeloggt, sonst zur Login-Seite #}
-      <a class="brand" href="{% if session.get('user') %}{{ url_for('main') }}{% else %}{{ url_for('login') }}{% endif %}">Book Journal</a>
+      <a class="brand" href="{% if session.get('user') %}{{ url_for('index') }}{% else %}{{ url_for('login') }}{% endif %}">Book Journal</a>
 
       {# hide_nav wird beim Login-Render auf True gesetzt, dann sind Links ausgeblendet #}
       {% if not hide_nav %}
       <div class="nav-actions">
-        <a href="{{ url_for('main') }}">Übersicht</a>
+        <a href="{{ url_for('index') }}">Übersicht</a>
         <a href="{{ url_for('add_book') }}">Buch hinzufügen</a>
 
         {% if session.get('user') %}
