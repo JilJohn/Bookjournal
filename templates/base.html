@@ -10,24 +10,19 @@
 <body>
   <header class="site-header">
     <nav class="nav">
-      {# Brand: geht zur Hauptübersicht wenn eingeloggt, sonst zur Login-Seite #}
-      <a class="brand" href="{% if session.get('user') %}{{ url_for('index') }}{% else %}{{ url_for('login') }}{% endif %}">Book Journal</a>
+      <a class="brand" href="{{ url_for('index') }}">Book Journal</a>
 
-      {# hide_nav wird beim Login-Render auf True gesetzt, dann sind Links ausgeblendet #}
-      {% if not hide_nav %}
       <div class="nav-actions">
-        <a href="{{ url_for('index') }}">Übersicht</a>
-        <a href="{{ url_for('add_book') }}">Buch hinzufügen</a>
-
-        {% if session.get('user') %}
-          <span class="nav-user">Angemeldet als {{ session.get('user') }}</span>
+        {% if session.get('user_id') %}
+          <a href="{{ url_for('index') }}">Übersicht</a>
+          <a href="{{ url_for('add_book') }}">Buch hinzufügen</a>
           <a href="{{ url_for('dashboard') }}">Dashboard</a>
           <a href="{{ url_for('logout') }}">Logout</a>
         {% else %}
           <a href="{{ url_for('login') }}">Login</a>
+          <a href="{{ url_for('register') }}">Registrieren</a>
         {% endif %}
       </div>
-      {% endif %}
     </nav>
   </header>
 
@@ -36,7 +31,7 @@
   </main>
 
   <footer class="site-footer">
-    <small>© {{ (current_year or "") }}</small>
+    <small>©️ {{ (current_year or "") }}</small>
   </footer>
 </body>
 </html>

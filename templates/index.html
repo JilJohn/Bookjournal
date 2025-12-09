@@ -1,14 +1,10 @@
 <!doctype html>
 <html lang="de">
     {% extends "base.html" %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>{% block title %}Meine Bücher{% endblock %}</title>
-</head>
-<body>
-    {% block content %}
+{% block title %}{% if logged_in %}Meine Bücher{% else %}Willkommen{% endif %}{% endblock %}
+{% block content %}
+
+{% if logged_in %}
   <div class="page-actions" style="display:flex;justify-content:space-between;align-items:center;">
     <h1>Meine Bücher</h1>
     <a class="btn" href="{{ url_for('add_book') }}">Buch hinzufügen</a>
@@ -27,6 +23,15 @@
       <p>Keine Bücher vorhanden. Füge ein neues Buch hinzu.</p>
   {% endfor %}
   </div>
+{% else %}
+  <div style="text-align:center;margin-top:4rem;">
+    <h1>Willkommen beim Book Journal</h1>
+    <p style="margin:2rem 0;">Verwalte deine Bücher und Lesenotizen.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;">
+      <a class="btn" href="{{ url_for('login') }}">Login</a>
+      <a class="btn" href="{{ url_for('register') }}">Registrieren</a>
+    </div>
+  </div>
+{% endif %}
+
 {% endblock %}
-</body>
-</html>

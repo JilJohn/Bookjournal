@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registrierung</title>
+</head>
+<body>
+{% extends "base.html" %}
+{% block title %}Registrierung{% endblock %}
+{% block content %}
+<div class="register-page" style="max-width:420px;margin:2rem auto;">
+  <h1>Registrierung</h1>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <p style="color:red;padding:0.5rem;background:#ffe6e6;border-radius:4px;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" class="form">
+    <label for="username">Benutzername</label>
+    <input id="username" name="username" type="text" required autofocus>
+
+    <label for="password">Passwort</label>
+    <input id="password" name="password" type="password" required>
+
+    <div style="margin-top:.5rem;">
+      <button type="submit">Registrieren</button>
+    </div>
+  </form>
+
+  <p style="margin-top:1rem;">
+    Bereits einen Account? <a href="{{ url_for('login') }}">Hier anmelden</a>
+  </p>
+</div>
+{% endblock %}
+</body>
+</html>
