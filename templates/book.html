@@ -7,13 +7,13 @@
     <p class="status">Status: {{ book.status }}</p>
 
     <h3>Notizen</h3>
-    <ul class="notes">
+    <div class="notes">
     {% for note in book.notes %}
-      <li>{{ note.created_at.strftime('%d.%m.%Y') }} — {{ note.text }}</li>
+      <p>{{ note.created_at.strftime('%d.%m.%Y') }} — {{ note.text }}</p>
     {% else %}
-      <li>Keine Notizen.</li>
+      <p>Keine Notizen.</p>
     {% endfor %}
-    </ul>
+    </div>
 
     <form method="post" class="note-form">
       <input type="text" name="note" placeholder="Neue Notiz" required>

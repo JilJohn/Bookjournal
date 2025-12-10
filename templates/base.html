@@ -3,9 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{% block title %}Book Journal{% endblock %}</title>
+  <title>Book Journal</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  {% block head %}{% endblock %}
 </head>
 <body>
   <header class="site-header">
@@ -31,7 +30,7 @@
   </main>
 
   <footer class="site-footer">
-    <small>©️ {{ (current_year or "") }}</small>
+    <small>&copy; 2025</small>
   </footer>
 </body>
 </html>

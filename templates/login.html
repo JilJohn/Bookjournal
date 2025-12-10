@@ -3,6 +3,15 @@
 {% block content %}
 <div class="auth-page">
   <h1>Login</h1>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <p class="error-message">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
   <form method="POST" class="form">
     <label for="username">Benutzername</label>
     <input id="username" name="username" type="text" required autofocus>
