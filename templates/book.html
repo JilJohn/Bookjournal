@@ -9,7 +9,7 @@
     <h3>Notizen</h3>
     <ul class="notes">
     {% for note in book.notes %}
-      <li>{{ note.date }} — {{ note.text }}</li>
+      <li>{{ note.created_at.strftime('%d.%m.%Y') }} — {{ note.text }}</li>
     {% else %}
       <li>Keine Notizen.</li>
     {% endfor %}
@@ -17,11 +17,6 @@
 
     <form method="post" class="note-form">
       <input type="text" name="note" placeholder="Neue Notiz" required>
-      <select name="status">
-        <option value="planned" {% if book.status=='planned' %}selected{% endif %}>Planned</option>
-        <option value="reading" {% if book.status=='reading' %}selected{% endif %}>Reading</option>
-        <option value="read" {% if book.status=='read' %}selected{% endif %}>Read</option>
-      </select>
       <button type="submit">Speichern</button>
     </form>
 

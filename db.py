@@ -25,7 +25,7 @@ class BookDB:
     def get_book(self, book_id, user_id):
         return self.db.query(Book).filter(Book.id == book_id, Book.user_id == user_id).first()
 
-    def add_book(self, title, user_id, author="", status="planned"):
+    def add_book(self, title, user_id, author="", status="Geplantes Buch"):
         book = Book(title=title, author=author, status=status, user_id=user_id)
         self.db.add(book)
         self.db.commit()

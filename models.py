@@ -28,7 +28,7 @@ class Book(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
     author = Column(String)
-    status = Column(String, default="planned")
+    status = Column(String, default="Geplantes Buch")
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     notes = relationship("Note", back_populates="book", cascade="all, delete")
