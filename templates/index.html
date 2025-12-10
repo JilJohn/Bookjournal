@@ -1,11 +1,9 @@
-<!doctype html>
-<html lang="de">
-    {% extends "base.html" %}
+{% extends "base.html" %}
 {% block title %}{% if logged_in %}Meine Bücher{% else %}Willkommen{% endif %}{% endblock %}
 {% block content %}
 
 {% if logged_in %}
-  <div class="page-actions" style="display:flex;justify-content:space-between;align-items:center;">
+  <div class="page-actions">
     <h1>Meine Bücher</h1>
     <a class="btn" href="{{ url_for('add_book') }}">Buch hinzufügen</a>
   </div>
@@ -24,10 +22,10 @@
   {% endfor %}
   </div>
 {% else %}
-  <div style="text-align:center;margin-top:4rem;">
+  <div class="welcome-section">
     <h1>Willkommen beim Book Journal</h1>
-    <p style="margin:2rem 0;">Verwalte deine Bücher und Lesenotizen.</p>
-    <div style="display:flex;gap:1rem;justify-content:center;">
+    <p class="welcome-text">Verwalte deine Bücher und Lesenotizen.</p>
+    <div class="button-group">
       <a class="btn" href="{{ url_for('login') }}">Login</a>
       <a class="btn" href="{{ url_for('register') }}">Registrieren</a>
     </div>

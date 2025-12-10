@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-</head>
-<body>
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
 {% block content %}
-<div class="login-page" style="max-width:420px;margin:2rem auto;">
+<div class="auth-page">
   <h1>Login</h1>
   <form method="POST" class="form">
     <label for="username">Benutzername</label>
@@ -16,14 +10,12 @@
     <label for="password">Passwort</label>
     <input id="password" name="password" type="password" required>
 
-    <div style="margin-top:.5rem;">
+    <div class="button-container">
       <button type="submit">Login</button>
     </div>
   </form>
-  <p style="margin-top:1rem;text-align:center;">
+  <p class="auth-link-center">
     Noch kein Konto? <a href="/register">Jetzt registrieren</a>
   </p>
 </div>
 {% endblock %}
-</body>
-</html>

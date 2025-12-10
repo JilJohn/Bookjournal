@@ -71,6 +71,34 @@ body{
 .form input{padding:8px;border-radius:6px;border:1px solid rgba(0,0,0,0.08)}
 .form button{padding:8px 12px;border-radius:6px;border:none;background:var(--accent);color:#fff;cursor:pointer}
 
+/* Auth pages */
+.auth-page{max-width:420px;margin:2rem auto}
+.error-message{color:red;padding:0.5rem;background:#ffe6e6;border-radius:4px}
+.button-container{margin-top:.5rem}
+.auth-link{margin-top:1rem}
+.auth-link-center{margin-top:1rem;text-align:center}
+
+/* Page actions */
+.page-actions{display:flex;justify-content:space-between;align-items:center}
+
+/* Welcome section */
+.welcome-section{text-align:center;margin-top:4rem}
+.welcome-text{margin:2rem 0}
+.button-group{display:flex;gap:1rem;justify-content:center}
+
+/* Button */
+.btn{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn:hover{opacity:0.9}
+
+/* Form additions */
+.form label{display:block;margin-bottom:0.5rem}
+.form select{width:100%;padding:8px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);margin-bottom:1rem}
+.form input{width:100%;margin-bottom:1rem}
+.form a{margin-left:0.5rem;color:var(--muted);text-decoration:none}
+
+/* Footer */
+.site-footer{margin-top:2rem;text-align:center;color:var(--muted)}
+
 /* Responsive tweaks */
 @media (max-width:480px){
   .nav-actions{display:none}
