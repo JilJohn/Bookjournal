@@ -1,8 +1,0 @@
-book_journal/
-│
-├─ main.py          # Hauptcode mit Flask
-├─ book_app.py     # Dein bestehender BookJournal-Code
-├─ db.py            # Datenbank erstellung
-└─ templates/
-   ├─ index.html   # Startseite
-   └─ book.html    # Detailseite für ein Buch

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Buch bearbeiten{% endblock %}
+{% block content %}
+  <h1>Buch bearbeiten</h1>
+
+  <form method="POST" class="form">
+    <label for="title">Titel</label>
+    <input id="title" name="title" type="text" value="{{ book.title }}" required autofocus>
+
+    <label for="author">Autor</label>
+    <input id="author" name="author" type="text" value="{{ book.author }}">
+
+    <label for="status">Status</label>
+    <select id="status" name="status">
+      <option value="Geplantes Buch" {% if book.status == "Geplantes Buch" %}selected{% endif %}>Geplantes Buch</option>
+      <option value="aktuelles Buch" {% if book.status == "aktuelles Buch" %}selected{% endif %}>Aktuelles Buch</option>
+      <option value="abgeschlossenes Buch" {% if book.status == "abgeschlossenes Buch" %}selected{% endif %}>Abgeschlossenes Buch</option>
+    </select>
+
+    <div class="button-container">
+      <button type="submit">Speichern</button>
+      <a href="{{ url_for('book_detail', book_id=book.id) }}">Abbrechen</a>
+    </div>
+  </form>
+{% endblock %}
