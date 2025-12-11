@@ -3,7 +3,7 @@ from models import Session, User, Book, Note
 
 
 class BookDB:
-    def __init__(self):
+    def _init_(self):
         self.db = Session()
 
     def create_user(self, username, password):
@@ -39,4 +39,18 @@ class BookDB:
         book = self.db.query(Book).filter(Book.id == book_id).first()
         if book:
             book.status = status
+            self.db.commit()
+
+    def update_book(self, book_id, title, author, status):
+        book = self.db.query(Book).filter(Book.id == book_id).first()
+        if book:
+            book.title = title
+            book.author = author
+            book.status = status
+            self.db.commit()
+
+    def delete_book(self, book_id, user_id):
+        book = self.db.query(Book).filter(Book.id == book_id, Book.user_id == user_id).first()
+        if book:
+            self.db.delete(book)
             self.db.commit()

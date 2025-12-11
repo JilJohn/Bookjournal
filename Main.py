@@ -1,13 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from db import BookDB
-from statistics import BookStatistics
 import secrets
 
-app = Flask(_name_)
+app = Flask(__name__)
 app.secret_key = secrets.token_urlsafe(32)
 
 journal = BookDB()
-stats = BookStatistics()
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -88,6 +86,33 @@ def add_book():
 
     return render_template('add_book.html')
 
+@app.route('/edit_book/<int:book_id>', methods=['GET', 'POST'])
+def edit_book(book_id):
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+
+    book = journal.get_book(book_id, session['user_id'])
+    if not book:
+        return "Buch nicht gefunden", 404
+
+    if request.method == 'POST':
+        title = request.form.get('title')
+        author = request.form.get('author')
+        status = request.form.get('status')
+        if title:
+            journal.update_book(book_id, title, author, status)
+        return redirect(url_for('book_detail', book_id=book_id))
+
+    return render_template('edit.html', book=book)
+
+@app.route('/delete_book/<int:book_id>')
+def delete_book(book_id):
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+
+    journal.delete_book(book_id, session['user_id'])
+    return redirect(url_for('index'))
+
 @app.route('/logout')
 def logout():
     session.clear()
@@ -97,15 +122,7 @@ def logout():
 def dashboard():
     if not session.get('user_id'):
         return redirect(url_for('login'))
+    return render_template('dashboard.html', username=session.get('username'))
 
-    # Statistikdaten holen
-    status_stats = stats.get_status_statistics(session['user_id'])
-    total_books = stats.get_total_books(session['user_id'])
-
-    return render_template('dashboard.html',
-                         username=session.get('username'),
-                         status_stats=status_stats,
-                         total_books=total_books)
-
-if _name_ == "_main_":
+if __name__ == "__main__":
     app.run(debug=True, port=5002)
