@@ -1,6 +1,58 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
-  <h1>Willkommen, {{ username }}!</h1>
-  <a href="{{ url_for('logout') }}">Logout</a>
+  <h1>Dashboard</h1>
+
+  <div class="statistics-section" style="margin-top: 30px;">
+    <h2>Buchstatistiken</h2>
+    <p>Gesamtanzahl der Bücher: <strong>{{ total_books }}</strong></p>
+
+    <div style="max-width: 500px; margin: 20px auto;">
+      <canvas id="bookStatusChart"></canvas>
+    </div>
+
+   
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('bookStatusChart').getContext('2d');
+    const bookStatusChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Geplantes Buch', 'Aktuelles Buch', 'Abgeschlossenes Buch'],
+        datasets: [{
+          label: 'Anzahl Bücher',
+          data: [
+            {{ status_stats['Geplantes Buch'] }},
+            {{ status_stats['Aktuelles Buch'] }},
+            {{ status_stats['Abgeschlossenes Buch'] }}
+          ],
+          backgroundColor: [
+            '#FF6384',
+            '#36A2EB',
+            '#4BC0C0'
+          ],
+          borderColor: [
+            '#fff',
+            '#fff',
+            '#fff'
+          ],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Buchstatus Übersicht'
+          }
+        }
+      }
+    });
+  </script>
 {% endblock %}

@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from db import BookDB
+from statistics import BookStatistics
 import secrets
 
-app = Flask(__name__)
+app = Flask(_name_)
 app.secret_key = secrets.token_urlsafe(32)
 
 journal = BookDB()
+stats = BookStatistics()
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -95,7 +97,15 @@ def logout():
 def dashboard():
     if not session.get('user_id'):
         return redirect(url_for('login'))
-    return render_template('dashboard.html', username=session.get('username'))
 
-if __name__ == "__main__":
+    # Statistikdaten holen
+    status_stats = stats.get_status_statistics(session['user_id'])
+    total_books = stats.get_total_books(session['user_id'])
+
+    return render_template('dashboard.html',
+                         username=session.get('username'),
+                         status_stats=status_stats,
+                         total_books=total_books)
+
+if _name_ == "_main_":
     app.run(debug=True, port=5002)
