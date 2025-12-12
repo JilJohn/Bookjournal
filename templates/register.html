@@ -1,31 +1,59 @@
 {% extends "base.html" %}
+<!--
+  Erbt das Grundlayout von base.html.
+  Header, Navigation und Footer werden automatisch eingebunden.
+-->
+
 {% block title %}Registrierung{% endblock %}
+<!--
+  Überschreibt den <title>-Block.
+  Browser-Tab zeigt "Registrierung".
+-->
+
 {% block content %}
+<!--
+  Beginnt den Content-Block, der im <main>-Tag von base.html angezeigt wird.
+-->
+
 <div class="auth-page">
+  <!-- Container für die Registrierungsseite (für CSS-Styling) -->
+
   <h1>Registrierung</h1>
+  <!-- Überschrift der Seite -->
 
   {% with messages = get_flashed_messages() %}
     {% if messages %}
       {% for message in messages %}
         <p class="error-message">{{ message }}</p>
+        <!--
+          Zeigt Fehlermeldungen vom Server an, z.B. "Benutzername bereits vergeben".
+          CSS-Klasse 'error-message' sorgt für visuelle Hervorhebung.
+        -->
       {% endfor %}
     {% endif %}
   {% endwith %}
 
   <form method="POST" class="form">
+    <!--
+      Formular zum Registrieren eines neuen Benutzers.
+      method="POST" → Daten werden an die Flask-Route gesendet.
+      class="form" → für CSS-Styling.
+    -->
+
     <label for="username">Benutzername</label>
     <input id="username" name="username" type="text" required autofocus>
+    <!--
+      Eingabefeld für den Benutzernamen.
+      required → Pflichtfeld.
+      autofocus → Cursor steht automatisch hier.
+    -->
 
     <label for="password">Passwort</label>
     <input id="password" name="password" type="password" required>
+    <!--
+      Eingabefeld für das Passwort.
+      type="password → Eingabe wird als Punkte angezeigt.
+      required → Pflichtfeld.
+    -->
 
     <div class="button-container">
-      <button type="submit">Registrieren</button>
-    </div>
-  </form>
-
-  <p class="auth-link">
-    Bereits einen Account? <a href="{{ url_for('login') }}">Hier anmelden</a>
-  </p>
-</div>
-{% endblock %}
