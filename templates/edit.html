@@ -1,14 +1,42 @@
 {% extends "base.html" %}
+<!--
+  Dieses Template erbt das Grundlayout aus base.html.
+  Header, Navigation und Footer werden automatisch übernommen.
+-->
+
 {% block title %}Buch bearbeiten{% endblock %}
+<!--
+  Überschreibt den <title>-Block aus base.html.
+  Der Browser-Tab zeigt jetzt "Buch bearbeiten".
+-->
+
 {% block content %}
+<!--
+  Beginnt den Content-Block, der im <main> Bereich von base.html angezeigt wird.
+-->
+
   <h1>Buch bearbeiten</h1>
+  <!-- Überschrift der Seite -->
 
   <form method="POST" class="form">
+  <!--
+    Formular zum Bearbeiten eines Buches
+    method="POST" → Daten werden an Flask gesendet
+    class="form" → für CSS-Styling
+  -->
+
     <label for="title">Titel</label>
     <input id="title" name="title" type="text" value="{{ book.title }}" required autofocus>
+    <!--
+      Eingabefeld für den Titel
+      value="{{ book.title }}" → das Feld ist vorausgefüllt mit dem aktuellen Titel
+      required → Pflichtfeld
+      autofocus → Cursor startet automatisch hier
+    -->
 
     <label for="author">Autor</label>
     <input id="author" name="author" type="text" value="{{ book.author }}">
+    <!-- Eingabefeld für den Autor, vorausgefüllt mit dem aktuellen Autor -->
 
     <label for="status">Status</label>
     <select id="status" name="status">
@@ -16,10 +44,21 @@
       <option value="aktuelles Buch" {% if book.status == "aktuelles Buch" %}selected{% endif %}>Aktuelles Buch</option>
       <option value="abgeschlossenes Buch" {% if book.status == "abgeschlossenes Buch" %}selected{% endif %}>Abgeschlossenes Buch</option>
     </select>
+    <!--
+      Dropdown-Menü für den Status des Buches
+      Die aktuelle Statusoption wird automatisch ausgewählt:
+      - Jinja2 if-Abfrage prüft book.status
+      - selected → Option ist vorausgewählt
+    -->
 
     <div class="button-container">
       <button type="submit">Speichern</button>
+      <!-- Button zum Absenden des Formulars -->
+      
       <a href="{{ url_for('book_detail', book_id=book.id) }}">Abbrechen</a>
+      <!-- Link zurück zur Buchdetailseite, Formular wird nicht abgesendet -->
     </div>
   </form>
+
 {% endblock %}
+<!-- Ende des Content-Blocks -->

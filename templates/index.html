@@ -1,35 +1,70 @@
 {% extends "base.html" %}
+<!--
+  Dieses Template erbt das Grundlayout aus base.html.
+  Header, Navigation und Footer werden automatisch übernommen.
+-->
+
 {% block title %}{% if logged_in %}Meine Bücher{% else %}Willkommen{% endif %}{% endblock %}
+<!--
+  Überschreibt den <title>-Block:
+  - Wenn der Benutzer eingeloggt ist → Titel "Meine Bücher"
+  - Wenn nicht eingeloggt → Titel "Willkommen"
+-->
+
 {% block content %}
+<!--
+  Beginnt den Content-Block, der im <main>-Tag von base.html angezeigt wird.
+-->
 
 {% if logged_in %}
+<!--
+  Alles in diesem Block wird nur angezeigt, wenn der Benutzer eingeloggt ist.
+-->
+
   <div class="page-actions">
     <h1>Meine Bücher</h1>
     <a class="btn" href="{{ url_for('add_book') }}">Buch hinzufügen</a>
+    <!-- Button zum Hinzufügen eines neuen Buches -->
   </div>
 
   <div class="books-grid">
   {% for book in books %}
+      <!--
+        Iteriert über die Liste aller Bücher des Benutzers
+        Jedes Buch wird als Karte angezeigt
+      -->
       <article class="book-card">
           <a href="{{ url_for('book_detail', book_id=book.id) }}">
               <h2>{{ book.title }}</h2>
               <p class="meta">{{ book.author }}</p>
               <p class="status">{{ book.status }}</p>
+              <!-- Zeigt Titel, Autor und Status des Buches -->
           </a>
       </article>
   {% else %}
+      <!--
+        Wird ausgeführt, wenn die Liste 'books' leer ist.
+        Zeigt eine Nachricht, dass noch keine Bücher vorhanden sind.
+      -->
       <p>Keine Bücher vorhanden. Füge ein neues Buch hinzu.</p>
   {% endfor %}
   </div>
+
 {% else %}
+<!--
+  Alles in diesem Block wird angezeigt, wenn der Benutzer **nicht** eingeloggt ist.
+-->
+
   <div class="welcome-section">
     <h1>Willkommen beim Book Journal</h1>
     <p class="welcome-text">Verwalte deine Bücher und Lesenotizen.</p>
     <div class="button-group">
       <a class="btn" href="{{ url_for('login') }}">Login</a>
       <a class="btn" href="{{ url_for('register') }}">Registrieren</a>
+      <!-- Buttons zum Einloggen oder Registrieren -->
     </div>
   </div>
 {% endif %}
 
 {% endblock %}
+<!-- Ende des Content-Blocks -->
