@@ -1,13 +1,44 @@
 {% extends "base.html" %}
+<!--
+  Dieses Template erbt das Grundlayout von base.html.
+  Header, Navigation, Footer und allgemeines Layout werden automatisch übernommen.
+-->
+
 {% block title %}Dashboard{% endblock %}
+<!--
+  Überschreibt den 'title'-Block in base.html.
+  Der Browser-Tab zeigt nun "Dashboard" statt dem Standardtitel an.
+-->
+
 {% block content %}
+<!--
+  Beginnt den Inhaltsbereich, der in base.html im <main>-Tag eingefügt wird.
+-->
+
   <h1>Dashboard</h1>
+  <!-- Seitentitel im sichtbaren Inhalt -->
 
   <div class="statistics-section" style="margin-top: 30px;">
+    <!-- Container für den Statistikbereich mit Abstand nach oben -->
+
     <h2>Buchstatistiken</h2>
+    <!-- Unterüberschrift für den Statistikteil -->
 
     <div style="max-width: 800px; margin: 20px auto;">
+      <!--
+        Ein zentrierter Bereich für die Grafik.
+        max-width: begrenzt die Breite auf 800px
+        margin: auto zentriert den Container auf der Seite
+      -->
+
       {{ chart|safe }}
+      <!--
+        chart = Variable, die von Flask übergeben wird 
+        |safe = sorgt dafür, dass Flask den HTML-Inhalt nicht als Text escaped.
+        Dadurch wird die Grafik korrekt angezeigt.
+      -->
     </div>
   </div>
+
 {% endblock %}
+<!-- Ende des Inhaltsblocks -->

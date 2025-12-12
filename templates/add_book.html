@@ -1,14 +1,43 @@
 {% extends "base.html" %}
+<!-- 
+  Dieses Template erbt von base.html.
+  Alles in base.html (Header, Footer, CSS, Navigation) wird übernommen.
+-->
+
 {% block title %}Buch hinzufügen{% endblock %}
+<!-- 
+  Überschreibt den Block "title" aus base.html.
+-->
+
 {% block content %}
+<!-- 
+  Alles innerhalb dieses Blocks wird in den "content"-Block von base.html eingefügt.
+-->
+
   <h1>Neues Buch hinzufügen</h1>
+  <!-- Seitenüberschrift -->
 
   <form method="POST" class="form">
+  <!--
+    Formular zum Hinzufügen eines Buches
+    method="POST" sendet die Daten im Request-Body (nicht in der URL)
+    class="form" dient dem CSS-Styling
+  -->
+
     <label for="title">Titel</label>
+    <!-- Beschriftung für das Input-Feld "title" -->
     <input id="title" name="title" type="text" required autofocus>
+    <!-- 
+      Textfeld für den Buchtitel
+      required → Pflichtfeld
+      autofocus → Cursor startet automatisch in diesem Feld
+      name="title" → Schlüssel für Flask, um das Feld zu identifizieren
+    -->
 
     <label for="author">Autor</label>
     <input id="author" name="author" type="text">
+    <!-- Textfeld für den Autor
+         optional, da kein required-Attribut gesetzt ist -->
 
     <label for="status">Status</label>
     <select id="status" name="status">
@@ -16,10 +45,20 @@
       <option value="Aktuelles Buch">Aktuelles Buch</option>
       <option value="Abgeschlossenes Buch">Abgeschlossenes Buch</option>
     </select>
+    <!-- 
+      Dropdown-Menü für den Status des Buches
+      value → wird an Flask gesendet, wenn der User die Option auswählt
+    -->
 
     <div class="button-container">
       <button type="submit">Hinzufügen</button>
+      <!-- Button zum Absenden des Formulars -->
+
       <a href="{{ url_for('index') }}">Abbrechen</a>
+      <!-- Link zurück zur Übersicht, Formular wird nicht abgesendet -->
     </div>
+
   </form>
+
 {% endblock %}
+<!-- Ende des content-Blocks -->

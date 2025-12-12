@@ -1,30 +1,77 @@
 {% extends "base.html" %}
+<!--
+  Dieses Template erbt das Grundlayout aus base.html.
+  Header, Navigation und Footer werden automatisch übernommen.
+-->
+
 {% block title %}{{ book.title }}{% endblock %}
+<!--
+  Überschreibt den <title>-Block aus base.html.
+  Der Browser-Tab zeigt jetzt den Buchtitel an.
+-->
+
 {% block content %}
+<!--
+  Beginnt den Content-Block, der in base.html in <main> eingesetzt wird.
+-->
+
   <article class="book-detail">
+  <!-- Semantic HTML: <article> steht für einen zusammenhängenden Inhalt -->
+
     <h1>{{ book.title }}</h1>
+    <!-- Hauptüberschrift – zeigt den Titel des Buches -->
+
     <p class="meta">Autor: {{ book.author }}</p>
+    <!-- Zeigt den Autor an -->
+
     <p class="status">Status: {{ book.status }}</p>
+    <!-- Zeigt den Status des Buches an (Geplant, Aktuell, Abgeschlossen) -->
 
     <div class="book-actions">
+      <!-- Bereich für Bearbeiten/Löschen Buttons -->
+
       <a class="btn" href="{{ url_for('edit_book', book_id=book.id) }}">Bearbeiten</a>
+      <!-- Link zur Bearbeitungs-Seite; Flask erhält book_id als Parameter -->
+
       <a class="btn btn-delete" href="{{ url_for('delete_book', book_id=book.id) }}">Löschen</a>
+      <!-- Link zum Löschen; ebenfalls mit book_id -->
     </div>
 
     <h3>Notizen</h3>
     <div class="notes">
+    <!-- Bereich, in dem alle Notizen zu diesem Buch angezeigt werden -->
+
     {% for note in book.notes %}
+      <!-- Iteriert über alle Notizen eines Buches -->
+
       <p>{{ note.created_at.strftime('%d.%m.%Y') }} — {{ note.text }}</p>
+      <!--
+        Zeigt: Datum der Notiz (formatiert als DD.MM.YYYY) + Text der Notiz
+        .strftime() wird im Template ausgeführt → erlaubt Datumformatierung
+      -->
+
     {% else %}
+      <!--
+        Wird ausgeführt, wenn die For-Schleife LEER ist.
+      -->
       <p>Keine Notizen.</p>
     {% endfor %}
     </div>
 
     <form method="post" class="note-form">
+      <!-- Formular zum Hinzufügen einer neuen Notiz -->
+
       <input type="text" name="note" placeholder="Neue Notiz" required>
+      <!-- Textfeld für neue Notiz; 'name' wird im Flask-Request verwendet -->
+
       <button type="submit">Speichern</button>
+      <!-- Beim Submit wird die neue Notiz an die Flask-Route gesendet -->
     </form>
 
     <p><a href="{{ url_for('index') }}">Zurück</a></p>
+    <!-- Link zurück zur Bücherübersicht -->
+
   </article>
+
 {% endblock %}
+<!-- Ende des Content-Blocks -->
