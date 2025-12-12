@@ -1,25 +1,48 @@
-<!doctype html>
+<!doctype html> 
+<!-- Grundlayout: HTML5-Dokumenttyp -->
+
 <html lang="de">
+<!-- Sprache auf Deutsch gesetzt -->
+
 <head>
   <meta charset="utf-8">
+  <!-- Zeichensatz UTF-8, damit Umlaute (ä, ö, ü) korrekt angezeigt werden -->
+
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- Responsives Design: Bildschirmbreite des Geräts berücksichtigen -->
+
+  {% block title %}
   <title>Book Journal</title>
+  {% endblock %}
+  <!-- 
+    Jinja-Block "title":
+    Child-Templates können den Titel überschreiben.
+  -->
+
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <!-- CSS-Datei einbinden. url_for sorgt dafür, dass Flask die korrekte URL zur statischen Datei erzeugt -->
 </head>
+
 <body>
   <header class="site-header">
     <nav class="nav">
       <a class="brand" href="{{ url_for('index') }}">Book Journal</a>
+      <!-- Link zur Startseite -->
 
       <div class="nav-actions">
         {% if session.get('user_id') %}
+        <!-- Prüft, ob ein Benutzer eingeloggt ist (Session-Variable 'user_id' gesetzt) -->
+
           <a href="{{ url_for('index') }}">Übersicht</a>
           <a href="{{ url_for('add_book') }}">Buch hinzufügen</a>
           <a href="{{ url_for('dashboard') }}">Dashboard</a>
           <a href="{{ url_for('logout') }}">Logout</a>
+          <!-- Links, die nur für eingeloggte Benutzer sichtbar sind -->
+
         {% else %}
           <a href="{{ url_for('login') }}">Login</a>
           <a href="{{ url_for('register') }}">Registrieren</a>
+          <!-- Links für nicht eingeloggte Benutzer -->
         {% endif %}
       </div>
     </nav>
@@ -27,10 +50,15 @@
 
   <main class="container">
     {% block content %}{% endblock %}
+    <!-- 
+      Jinja-Block "content":
+      Child-Templates füllen hier den individuellen Seiteninhalt ein
+    -->
   </main>
 
   <footer class="site-footer">
     <small>&copy; 2025</small>
+    <!-- Footer-Bereich mit Copyright -->
   </footer>
 </body>
 </html>
