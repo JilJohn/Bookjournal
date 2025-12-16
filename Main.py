@@ -34,9 +34,9 @@ class Book(Base):
     id = Column(Integer, primary_key=True)                                                          # Primärschlüssel: Eindeutige ID für jedes Buch
     title = Column(String, nullable=False)                                                          # Titel des Buches
     author = Column(String)                                                                         # Autor des Buches
-    status = Column(String, default="Geplantes Buch")                                               # Status des Buches
+    status = Column(String, default="Geplantes Buch")                                               # Status des Buches, Standardwert "Geplantes Buch"
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)                               # ID des zugehörigen Users      
-
+   
     notes = relationship("Note", back_populates="book", cascade="all, delete")                      # Beziehung zu Notizen, wenn Buch gelöscht wird, werden auch alle Notizen gelöscht
     user = relationship("User", back_populates="books")                                             # Beziehung: Ein Buch gehört genau einem User
 
@@ -83,7 +83,7 @@ def get_book(book_id, user_id):
     """Ein bestimmtes Buch eines Users abrufen"""
     return db_session.query(Book).filter(Book.id == book_id, Book.user_id == user_id).first()       # Abrufen eines bestimmten Buches eines bestimmten Users
 
-def add_new_book(title, user_id, author="", status="Geplantes Buch"):                   
+def add_new_book(title, user_id, author="", status="Geplantes Buch"):                               #Parameter: Titel, User-ID, Autor (optional), Status (optional, Standardwert "Geplantes Buch")
     """Neues Buch hinzufügen"""
     book = Book(title=title, author=author, status=status, user_id=user_id)                          # Neues Buch-Objekt erstellen
     db_session.add(book)                                                                             # Fügt das neue Buch der Session hinzu
